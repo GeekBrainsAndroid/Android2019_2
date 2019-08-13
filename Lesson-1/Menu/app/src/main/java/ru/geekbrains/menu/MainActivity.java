@@ -5,8 +5,11 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 
@@ -18,11 +21,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private ListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = initToolbar();
         initFab();
         initDrawer(toolbar);
+        initList();
     }
 
     private Toolbar initToolbar() {
@@ -59,6 +70,28 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    private void initList() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_list);
+
+        // Эта установка служит для повышения производительности системы
+        recyclerView.setHasFixedSize(true);
+
+        // Будем работать со встроенным менеджером
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Установим адаптер
+        adapter = new ListAdapter(initData(), this);
+        recyclerView.setAdapter(adapter);
+    }
+
+    private List<String> initData() {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            list.add(String.format("Element %d", i));
+        }
+        return list;
     }
 
     @Override
@@ -69,6 +102,30 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        ContextMenu.ContextMenuInfo menuInfo = item.getMenuInfo();
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.add_context:
+                return true;
+            case R.id.update_context:
+                return true;
+            case R.id.remove_context:
+                return true;
+            case R.id.clear_context:
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 
     @Override

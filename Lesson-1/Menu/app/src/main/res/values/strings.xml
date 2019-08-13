@@ -13,4 +13,8 @@
     <string name="menu_tools">Tools</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="remove">Remove</string>
+    <string name="clear">Clear</string>
 </resources>
