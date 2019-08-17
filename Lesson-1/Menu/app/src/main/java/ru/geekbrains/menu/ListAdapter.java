@@ -15,6 +15,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     private List<String> data;
     private Activity activity;
+    private int menuPosition;
 
     public ListAdapter(List<String> data, Activity activity){
         this.data = data;
@@ -31,11 +32,20 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
 
         // Заполнение элементов холдера
         TextView textElement = holder.getTextElement();
         textElement.setText(data.get(position));
+
+        // Определение текущей позиции в списке
+        textElement.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                menuPosition = position;
+                return false;
+            }
+        });
 
         // Так регистрируется контекстное меню
         activity.registerForContextMenu(textElement);
@@ -71,6 +81,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         data.clear();
         notifyDataSetChanged();
     }
+    
+    public int getMenuPosition() {
+        return menuPosition;
+    }
+
     //endregion
 
     public class ViewHolder extends RecyclerView.ViewHolder {
