@@ -18,4 +18,11 @@
         android:title="@string/clear"
         android:icon="@android:drawable/ic_menu_close_clear_cancel"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="5"
+        android:title="@string/search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always" />
 </menu>
