@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -20,12 +21,16 @@ public class BatteryView extends View {
     private int batteryColor = Color.GRAY;
     // Цвет уровня заряда
     private int levelColor = Color.GREEN;
+    // Цвет уровня заряда при нажатии +
+    private int levelPressedColor = Color.RED;
     // Изображение батареи
     private RectF batteryRectangle = new RectF();
     // Изображение уровня заряда
     private Rect levelRectangle = new Rect();
     // Изображение головы батареи
     private Rect headRectangle = new Rect();
+    // "Краска" уровня заряда при касании +
+    private Paint levelPressedPaint;
     // "Краска" батареи
     private Paint batteryPaint;
     // "Краска" заряда
@@ -37,6 +42,10 @@ public class BatteryView extends View {
 
     // Уровень заряда
     private int level = 100;
+    // касаемся элемента +
+    private boolean pressed = false;
+    // Слушатель касания +
+    private OnClickListener listener;
 
     // Константы
     // Отступ элементов
@@ -93,7 +102,8 @@ public class BatteryView extends View {
         // вторым параметром идет значение по умолчанию, если атрибут не указан в макете,
         // то будет подставлятся эначение по умолчанию.
         levelColor = typedArray.getColor(R.styleable.BatteryView_level_color, Color.GREEN);
-
+        levelPressedColor = typedArray.getColor(R.styleable.BatteryView_level_pressed_color, Color.RED);
+        
         // Обратите внимание, что первый параметр пишется особым способом
         // через подчерки. первое слово означает имя определения
         // <declare-styleable name="BatteryView">
@@ -116,6 +126,10 @@ public class BatteryView extends View {
         levelPaint = new Paint();
         levelPaint.setColor(levelColor);
         levelPaint.setStyle(Paint.Style.FILL);
+        // Задать "краску" для нажатия на элемент +
+        levelPressedPaint = new Paint();
+        levelPressedPaint.setColor(levelPressedColor);
+        levelPressedPaint.setStyle(Paint.Style.FILL);
     }
 
     // Когда система Андроид создает пользовательский экран, то еще неизвестны размеры элемента.
@@ -152,7 +166,57 @@ public class BatteryView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawRoundRect(batteryRectangle, round, round, batteryPaint);
-        canvas.drawRect(levelRectangle, levelPaint);
+
+        // Условие отрисовки, если нажат или нет элемент +
+        if (pressed){
+            canvas.drawRect(levelRectangle, levelPressedPaint);
+        }
+        else {
+            canvas.drawRect(levelRectangle, levelPaint);
+        }
         canvas.drawRect(headRectangle, batteryPaint);
+    }
+
+    // Этот метод срабатывает при касании элемента
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+
+        // получить действие, может быть касанием, отпусканием, перемещением...
+        int Action = event.getAction();
+
+        // Проверка на начало касания (нажали)
+        if(Action == MotionEvent.ACTION_DOWN){
+
+            // Установим признак того, что нажали элемент
+            pressed = true;
+
+            // Чтобы перерисовать, надо вызвать этот метод
+            invalidate();
+
+            // Если слушатель был установлен, то вызовем его метод
+            if (listener != null) {
+                listener.onClick(this);
+            }
+        }
+
+        // Проверка на отпускание элемента (убрали палец)
+        else if(Action == MotionEvent.ACTION_UP){
+
+            // Снимем признак касания элемента
+            pressed = false;
+
+            // Перерисовка элемента
+            invalidate();
+        }
+
+        // Касание обработано, вернем true.
+        return true;
+    }
+
+    // установка слушателя, это обычный слушатель,
+    // с каким уже сталкивались при обработке нажатий на кнопки
+    @Override
+    public void setOnClickListener(View.OnClickListener listener){
+        this.listener = listener;
     }
 }
