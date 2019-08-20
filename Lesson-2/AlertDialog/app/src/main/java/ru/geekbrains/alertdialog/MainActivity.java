@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         alertSingleList.setOnClickListener(clickAlertDialogListSingle);
         Button alertMultiList = findViewById(R.id.alertDialogListMulti);
         alertMultiList.setOnClickListener(clickAlertDialogListMulti);
+        Button alertView = findViewById(R.id.alertDialogView);
+        alertView.setOnClickListener(clickAlertDialogView);
     }
 
     private View.OnClickListener clickAlertDialog1 = new View.OnClickListener(){
@@ -184,6 +187,29 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                             Toast.makeText(MainActivity.this, sb.toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    };
+    private View.OnClickListener clickAlertDialogView = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // Создаем билдер и передаем контекст приложения
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            // Вытащим макет диалога
+            final View contentView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
+            // в билдере указываем заголовок окна (можно указывать как ресурс, так и строку)
+            builder.setTitle("Введите имя")
+                    // Установим макет диалога (можно устанавливать любой view)
+                    .setView(contentView)
+                    .setPositiveButton("Готово", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            EditText editText = contentView.findViewById(R.id.editText);
+                            Toast.makeText(MainActivity.this, String.format("Введено: %s", editText.getText().toString()), Toast.LENGTH_SHORT)
+                                    .show();
                         }
                     });
             AlertDialog alert = builder.create();
