@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Dialog Fragment</string>
+    <string name="dialog_builder">Диалог с билдером</string>
+    <string name="dialog_custom">Диалог кастомный</string>
+    <string name="title_dialog">Заголовок диалога</string>
+    <string name="message_dialog">Сообщение диалога</string>
+    <string name="yes">Да</string>
+    <string name="near_yes">Скорее да</string>
+    <string name="no">Нет</string>
+    <string name="near_no">Скорее нет</string>
+    <string name="dunno">Не знаю</string>
+</resources>
