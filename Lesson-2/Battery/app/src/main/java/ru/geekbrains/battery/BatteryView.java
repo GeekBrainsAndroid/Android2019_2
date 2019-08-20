@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,6 +17,8 @@ import androidx.annotation.Nullable;
 // Кастомный пользовательский элемент
 // Нарисуем батарею
 public class BatteryView extends View {
+
+    private static final String TAG = "BatteryView";
 
     // Цвет батареи
     private int batteryColor = Color.GRAY;
@@ -143,6 +146,8 @@ public class BatteryView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "onSizeChanged");
+
         // Получить реальные ширину и высоту
         width = w - getPaddingLeft() - getPaddingRight();
         height = h - getPaddingTop() - getPaddingBottom();
@@ -165,6 +170,8 @@ public class BatteryView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        Log.d(TAG, "onDraw");
+
         canvas.drawRoundRect(batteryRectangle, round, round, batteryPaint);
 
         // Условие отрисовки, если нажат или нет элемент +
@@ -180,7 +187,8 @@ public class BatteryView extends View {
     // Этот метод срабатывает при касании элемента
     @Override
     public boolean onTouchEvent(MotionEvent event){
-
+        Log.d(TAG, "onTouchEvent");
+        
         // получить действие, может быть касанием, отпусканием, перемещением...
         int Action = event.getAction();
 
@@ -218,5 +226,47 @@ public class BatteryView extends View {
     @Override
     public void setOnClickListener(View.OnClickListener listener){
         this.listener = listener;
+    }
+    // Методы жизненного цикла, для изучения
+    @Override
+    protected void onAttachedToWindow() {
+        Log.d(TAG, "onAttachedToWindow");
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Log.d(TAG, "onMeasure");
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    public void layout(int l, int t, int r, int b) {
+        Log.d(TAG, "layout");
+        super.layout(l, t, r, b);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        Log.d(TAG, "onLayout");
+        super.onLayout(changed, left, top, right, bottom);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        Log.d(TAG, "draw");
+        super.draw(canvas);
+    }
+
+    @Override
+    public void invalidate() {
+        Log.d(TAG, "invalidate");
+        super.invalidate();
+    }
+
+    @Override
+    public void requestLayout() {
+        Log.d(TAG, "requestLayout");
+        super.requestLayout();
     }
 }
