@@ -22,10 +22,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="30sp"
         android:text="Расчет в потоке"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="@+id/button"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <Button
+        android:id="@+id/calcThreadHandler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Расчет в HandlerThread"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/calcThreadBtn"
+        app:layout_constraintTop_toBottomOf="@+id/calcThreadBtn" />
 
     <TextView
         android:id="@+id/textView"
@@ -49,7 +59,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calcThreadBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/calcThreadHandler" />
 
     <EditText
         android:id="@+id/editText"
