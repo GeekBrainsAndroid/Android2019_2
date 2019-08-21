@@ -2,6 +2,7 @@ package ru.geekbrains.bottomdialog;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,9 +17,21 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 MyBottomSheetDialogFragment dialogFragment =
                         MyBottomSheetDialogFragment.newInstance();
+                dialogFragment.setOnDialogListener(dialogListener);
                 dialogFragment.show(getSupportFragmentManager(),
                         "dialog_fragment");
             }
         });
     }
+
+    private OnDialogListener dialogListener = new OnDialogListener() {
+        @Override
+        public void onDialogOk() {
+            Toast.makeText(MainActivity.this, "Нажата Ок", Toast.LENGTH_SHORT).show();
+        }
+        @Override
+        public void onDialogYes() {
+            Toast.makeText(MainActivity.this, "Нажата Yes", Toast.LENGTH_SHORT).show();
+        }
+    };
 }

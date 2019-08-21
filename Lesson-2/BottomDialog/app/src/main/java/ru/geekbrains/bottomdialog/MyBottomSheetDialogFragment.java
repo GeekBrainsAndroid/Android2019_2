@@ -9,10 +9,18 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.Objects;
+
 public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
+
+    private OnDialogListener dialogListener;
 
     public static MyBottomSheetDialogFragment newInstance() {
         return new MyBottomSheetDialogFragment();
+    }
+
+    public void setOnDialogListener(OnDialogListener dialogListener){
+        this.dialogListener = dialogListener;
     }
 
     @Nullable
@@ -30,6 +38,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
+                if (dialogListener != null) dialogListener.onDialogOk();
             }
         });
 
@@ -37,10 +46,10 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 dismiss();
+                if (dialogListener != null) dialogListener.onDialogYes();
             }
         });
 
         return view;
-
     }
 }
