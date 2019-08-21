@@ -22,20 +22,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Button button = findViewById(R.id.button);
         textView = findViewById(R.id.textView);
         textIndicator = findViewById(R.id.textIndicator);
         seconds = findViewById(R.id.editText);
+
+        initButton();
+        initButtonThread();
+    }
+
+    private void initButton(){
+        final Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String result = Long.toString(calculate(Integer.parseInt(seconds.getText().toString())));
-                textIndicator.setText("В главном потоке");
+                textIndicator.setText(String.format("%sВ главном потоке\n", textIndicator.getText().toString()));
                 textView.setText(result);
             }
         });
-
-        initButtonThread();
     }
 
     private void initButtonThread(){
@@ -45,12 +49,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 counterThread++;
                 final int numberThread = counterThread;
+                final int secs = Integer.parseInt(seconds.getText().toString());
+                textIndicator.setText(String.format("%sСтартуем поток %d\n",  textIndicator.getText().toString(), numberThread));
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String result = Long.toString(calculate(Integer.parseInt(seconds.getText().toString())));
-                        textIndicator.setText(String.format("Из потока %d", numberThread));
-                        textView.setText(result);
+                        final String result = Long.toString(calculate(secs));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                textIndicator.setText(String.format("%sИз потока %d\n",  textIndicator.getText().toString(), numberThread));
+                                textView.setText(result);
+                            }
+                        });
                     }
                 }).start();
             }
