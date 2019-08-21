@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Bottom Dialog</string>
+    <string name="dialog_message">Диалог снизу</string>
+    <string name="ok">Ок</string>
+    <string name="yes">Да</string>
+    <string name="dialog">Диалог</string>
+</resources>
