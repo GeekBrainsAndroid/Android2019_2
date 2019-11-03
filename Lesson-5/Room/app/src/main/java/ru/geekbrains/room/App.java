@@ -34,6 +34,7 @@ public class App extends Application {
                     EducationDatabase.class,
                     "education_database")
                 .allowMainThreadQueries() //Только для примеров и тестирования.
+                .fallbackToDestructiveMigration()
                 .build();
     }
 

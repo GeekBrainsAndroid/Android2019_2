@@ -74,7 +74,7 @@ public class StudentRecyclerAdapter extends RecyclerView.Adapter<StudentRecycler
             super(itemView);
             cardView = itemView;
             studentLastName = cardView.findViewById(R.id.textStudentLastName);
-            studentFirstName = cardView.findViewById(R.id.textStudenFirstName);
+            studentFirstName = cardView.findViewById(R.id.textStudentFirstName);
         }
     }
 }

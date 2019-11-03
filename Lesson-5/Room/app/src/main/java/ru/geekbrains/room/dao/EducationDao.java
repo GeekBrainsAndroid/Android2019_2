@@ -9,7 +9,10 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import ru.geekbrains.room.model.Email;
 import ru.geekbrains.room.model.Student;
+import ru.geekbrains.room.model.StudentEmail;
+import ru.geekbrains.room.model.StudentWithEmail;
 
 // Описание объекта, обрабатывающего данные
 // @Dao - доступ к данным
@@ -47,4 +50,25 @@ public interface EducationDao {
     //Получить количество записей в таблице
     @Query("SELECT COUNT() FROM student")
     long getCountStudents();
+
+    // Запрос сразу из двух таблиц
+    @Query("SELECT first_name, last_name, email " +
+            "FROM student " +
+            "INNER JOIN email ON student.id = email.student_id")
+    List<StudentWithEmail> getStudentWithEmail();
+
+    // Получим почту одного студента
+    @Query("SELECT * FROM email WHERE student_id = :studentId")
+    List<Email> getEmailByStudent(long studentId);
+
+    // Запрос через Relation
+    @Query("SELECT * FROM student")
+    List<StudentEmail> getStudentEmails();
+
+    // Получить через Relation одного студента
+    @Query("SELECT * FROM student WHERE id = :id")
+    StudentEmail getOneStudentEmails(long id);
+
+    @Insert
+    void insertEmail(Email email);
 }
