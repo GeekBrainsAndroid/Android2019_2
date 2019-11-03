@@ -6,4 +6,5 @@
     <string name="update">Update</string>
     <string name="remove">Remove</string>
     <string name="view">View</string>
+    <string name="authorities">ru.geekbrains.education.provider</string>
 </resources>

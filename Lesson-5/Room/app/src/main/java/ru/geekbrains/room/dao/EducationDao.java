@@ -1,5 +1,7 @@
 package ru.geekbrains.room.dao;
 
+import android.database.Cursor;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -71,4 +73,10 @@ public interface EducationDao {
 
     @Insert
     long insertEmail(Email email);
+
+    @Query("SELECT id, first_name, last_name FROM student")
+    Cursor getStudentCursor();
+
+    @Query("SELECT id, first_name, last_name FROM student WHERE id = :id")
+    Cursor getStudentCursor(long id);
 }
