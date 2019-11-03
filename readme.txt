@@ -12,3 +12,8 @@
 		Lesson-3/WorkManager: Работа с WorkManager
 Урок 4:
 		Lesson-4/OkHttp: Запрос на сайт через OkHttp
+		Lesson-4/Retrofit: Запрос к погодному API
+		Lesson-4/Picasso: Работа с изображениями
+Урок 5:
+		Lesson-5/Room: База данных
+		
