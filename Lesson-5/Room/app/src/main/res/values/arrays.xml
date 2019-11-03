@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="firstNames">
+        <item>Иван</item>
+        <item>Петр</item>
+        <item>Владимир</item>
+        <item>Константин</item>
+    </string-array>
+    <string-array name="lastNames">
+        <item>Иванов</item>
+        <item>Петров</item>
+        <item>Сидоров</item>
+        <item>Морозов</item>
+    </string-array>
+</resources>
