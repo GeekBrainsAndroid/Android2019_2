@@ -43,4 +43,8 @@ public interface EducationDao {
     // Получим данные только одного студента по id
     @Query("SELECT * FROM student WHERE id = :id")
     Student getStudentById(long id);
+
+    //Получить количество записей в таблице
+    @Query("SELECT COUNT() FROM student")
+    long getCountStudents();
 }

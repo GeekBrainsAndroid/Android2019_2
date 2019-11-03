@@ -30,9 +30,10 @@ public class App extends Application {
 
         // строим базу
         db = Room.databaseBuilder(
-                getApplicationContext(),
-                EducationDatabase.class,
-                "education_database")
+                    getApplicationContext(),
+                    EducationDatabase.class,
+                    "education_database")
+                .allowMainThreadQueries() //Только для примеров и тестирования.
                 .build();
     }
 
