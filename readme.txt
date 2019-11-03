@@ -9,3 +9,4 @@
 Урок 3:
 		Lesson-3/Thread: Демонстрация работы с потоками
 		Lesson-3/Service: Демонстрация работы сервиса
+		Lesson-3/WorkManager: Работа с WorkManager
