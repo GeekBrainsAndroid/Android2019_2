@@ -20,6 +20,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".сontentProvider.EducationContentProvider"
+            android:authorities="ru.geekbrains.education.provider"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>
