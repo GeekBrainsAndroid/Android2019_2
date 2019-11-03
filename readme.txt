@@ -18,3 +18,5 @@
 		Lesson-5/Room: База данных
 		Lesson-5/Contacts: Читаем контакты через Content Provider
 		Lesson-5/SharedPrefs: Сохраняем настойки
+Урок 6:
+		Lesson-6/Broadcast: Отправляем и получаем широковещательные сообщения
