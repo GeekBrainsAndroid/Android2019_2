@@ -1,6 +1,11 @@
 package ru.geekbrains.room;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,14 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import ru.geekbrains.room.dao.EducationDao;
 import ru.geekbrains.room.model.Student;
+import ru.geekbrains.room.model.StudentEmail;
 
 // Такой класс генерируется при создании Basic Activity
 // Мы немного изменили этот файл
@@ -85,6 +85,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.view_context:
+                Student viewStudent = educationSource
+                        .getStudents()
+                        .get((int) adapter.getMenuPosition());
+                StudentEmail studentEmail = educationSource.getStudentEmail(viewStudent.id);
+                StudentCardDialogFragment.create(studentEmail).show(getSupportFragmentManager(), "StudentCard");
+                return true;
             // Добавить запись
             case R.id.add_context:
                 // Получаем студента со случайными данными

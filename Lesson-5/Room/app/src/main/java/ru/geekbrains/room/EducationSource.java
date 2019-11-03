@@ -3,7 +3,9 @@ package ru.geekbrains.room;
 import java.util.List;
 
 import ru.geekbrains.room.dao.EducationDao;
+import ru.geekbrains.room.model.Email;
 import ru.geekbrains.room.model.Student;
+import ru.geekbrains.room.model.StudentEmail;
 
 // Вспомогательный класс, развязывающий
 // зависимость между Room и RecyclerView
@@ -40,9 +42,21 @@ public class EducationSource {
 
     // Добавить студента
     public void addStudent(Student student){
-        educationDao.insertStudent(student);
+        long id = educationDao.insertStudent(student);
+        Email email1 = new Email();
+        email1.studentId = id;
+        email1.email = "abc@mail.edu";
+        educationDao.insertEmail(email1);
+        Email email2 = new Email();
+        email2.studentId = id;
+        email2.email = "cde@another.mail";
+        educationDao.insertEmail(email2);
         // После изменения БД надо перечитать буфер
         LoadStudents();
+    }
+
+    public StudentEmail getStudentEmail(long id){
+        return educationDao.getOneStudentEmails(id);
     }
 
     // Заменить студента

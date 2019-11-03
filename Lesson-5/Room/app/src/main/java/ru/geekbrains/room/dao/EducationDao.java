@@ -25,7 +25,7 @@ public interface EducationDao {
     // onConflict - что делать, если такая запись уже есть
     // В данном случае просто заменим ее
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertStudent(Student student);
+    long insertStudent(Student student);
 
     // Метод для замены данных студента
     @Update
@@ -70,5 +70,5 @@ public interface EducationDao {
     StudentEmail getOneStudentEmails(long id);
 
     @Insert
-    void insertEmail(Email email);
+    long insertEmail(Email email);
 }

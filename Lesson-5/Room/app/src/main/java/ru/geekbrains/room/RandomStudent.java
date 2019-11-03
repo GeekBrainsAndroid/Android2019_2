@@ -2,8 +2,11 @@ package ru.geekbrains.room;
 
 import android.content.res.Resources;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 
+import ru.geekbrains.room.model.Address;
 import ru.geekbrains.room.model.Student;
 
 // Формирование студента случайным образом
@@ -26,6 +29,14 @@ public class RandomStudent {
     // Новая запись со случайным именем и фамилией
     public Student rndStudent(){
         Student student = new Student();
+        student.address = new Address();
+        student.address.city = "Москва";
+        student.address.street = "Красная площадь";
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 1988);
+        cal.set(Calendar.MONTH, Calendar.JANUARY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        student.dateBirth = cal.getTime();
         return rndUpdateStudent(student);
     }
 
