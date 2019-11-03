@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "301573339558",
+    "firebase_url": "https://pushmessage-d2287.firebaseio.com",
+    "project_id": "pushmessage-d2287",
+    "storage_bucket": "pushmessage-d2287.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:301573339558:android:32da1eb464c21e06c9f767",
+        "android_client_info": {
+          "package_name": "ru.geekbrains.pushmessage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "301573339558-7qjfe7u5je6poeknu0pviieaa283q7ic.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.geekbrains.pushmessage",
+            "certificate_hash": "472e1447c7da8b481833116b901b5f182920ee55"
+          }
+        },
+        {
+          "client_id": "301573339558-ngfr5gnsuguaqhi12qubv2l8ti0su1fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN9988WiXCk16nAZUtKnRSa9wWbljtD3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "301573339558-ngfr5gnsuguaqhi12qubv2l8ti0su1fn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
