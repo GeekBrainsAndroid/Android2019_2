@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SharedPrefs</string>
+    <string name="key">Ключ</string>
+    <string name="value">Значение</string>
+    <string name="save_prefs">Сохранить без имени</string>
+    <string name="save_named_prefs">Сохранить по имени</string>
+    <string name="load_prefs">Загрузить без имени</string>
+    <string name="load_named_prefs">Загрузить по имени</string>
+</resources>
