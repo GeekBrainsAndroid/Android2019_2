@@ -16,4 +16,4 @@
 		Lesson-4/Picasso: Работа с изображениями
 Урок 5:
 		Lesson-5/Room: База данных
-		
+		Lesson-5/Contacts: Читаем контакты через Content Provider
