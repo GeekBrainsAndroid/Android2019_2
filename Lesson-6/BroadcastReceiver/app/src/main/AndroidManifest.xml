@@ -20,7 +20,11 @@
         <receiver
             android:name=".MessageReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true">
+            <intent-filter>
+                <action android:name="ru.geekbrains.broadcastsender.message" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
