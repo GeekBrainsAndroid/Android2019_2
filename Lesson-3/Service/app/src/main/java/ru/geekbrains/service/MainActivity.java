@@ -1,6 +1,7 @@
 package ru.geekbrains.service;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -94,6 +95,21 @@ public class MainActivity extends AppCompatActivity {
                     long fibo = boundService.getNextFibonacci();
                     textFibonacci.setText(Long.toString(fibo));
                 }
+            }
+        });
+
+        findViewById(R.id.buttonForegroundService).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent serviceIntent = new Intent(MainActivity.this, ForegroundService.class);
+                ContextCompat.startForegroundService(MainActivity.this, serviceIntent);
+            }
+        });
+        findViewById(R.id.buttonStopForeground).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent serviceIntent = new Intent(MainActivity.this, ForegroundService.class);
+                stopService(serviceIntent);
             }
         });
     }
