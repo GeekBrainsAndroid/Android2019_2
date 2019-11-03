@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import ru.geekbrains.room.dao.EducationDao;
 import ru.geekbrains.room.database.EducationDatabase;
+import ru.geekbrains.room.database.Migration_1_2;
 
 // паттерн синглтон, наследуем класс Application
 // создаем базу данных в методе onCreate
@@ -34,7 +35,7 @@ public class App extends Application {
                     EducationDatabase.class,
                     "education_database")
                 .allowMainThreadQueries() //Только для примеров и тестирования.
-                .fallbackToDestructiveMigration()
+                .addMigrations(new Migration_1_2())
                 .build();
     }
 
