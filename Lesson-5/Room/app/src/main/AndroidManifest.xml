@@ -23,7 +23,7 @@
 
         <provider
             android:name=".сontentProvider.EducationContentProvider"
-            android:authorities="ru.geekbrains.education.provider"
+            android:authorities="@string/authorities"
             android:enabled="true"
             android:exported="true"></provider>
     </application>
