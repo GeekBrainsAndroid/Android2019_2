@@ -48,7 +48,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
         });
 
         // Так регистрируется контекстное меню
-        activity.registerForContextMenu(textElement);
+        if (activity != null){
+            activity.registerForContextMenu(textElement);
+        }
     }
 
     @Override
