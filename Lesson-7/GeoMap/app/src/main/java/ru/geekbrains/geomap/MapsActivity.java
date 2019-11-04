@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -58,6 +59,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         textLatitude = findViewById(R.id.editLat);
         textLongitude = findViewById(R.id.editLng);
         textAddress = findViewById(R.id.textAddress);
+        initSearchByAddress();
+    }
+
+    private void initSearchByAddress() {
+        final EditText textSearch = findViewById(R.id.searchAddress);
+        findViewById(R.id.buttonSearch).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Geocoder geocoder = new Geocoder(MapsActivity.this);
+                final String searchText = textSearch.getText().toString();
+                // Операция получения занимает некоторое время и работает по интернету
+                // Поэтому ее необходимо запускать в отдельном потоке
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            // Получить координаты по адресу
+                            List<Address> addresses = geocoder.getFromLocationName(searchText, 1);
+                            if (addresses.size() > 0){
+                                final LatLng location = new LatLng(addresses.get(0).getLatitude(),
+                                        addresses.get(0).getLongitude());
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mMap.addMarker(new MarkerOptions()
+                                                .position(location)
+                                                .title(searchText)
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_search_marker)));
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, (float)15));
+                                    }
+                                });
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
     }
 
     // Запрос пермиссий
