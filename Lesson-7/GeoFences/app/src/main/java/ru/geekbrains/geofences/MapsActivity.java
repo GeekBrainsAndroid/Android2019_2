@@ -5,25 +5,42 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 10;
-
+    Marker currentMarker;
     private GoogleMap mMap;
+    private GoogleApiClient googleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         requestPemissions();
+        createGoogleApiClient();
+        initNotificationChannel();
     }
 
 
@@ -50,6 +69,91 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        currentMarker = mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(0, 0))
+                .anchor(0.5f, 0.5f)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_current))
+                .title("Current position"));
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Marker marker = addMarker(latLng);
+                Geofence geofence = createGeofence(marker);
+                createGeofencingRequest(geofence);
+            }
+        });
+    }
+
+    // Добавление меток на карту
+    private Marker addMarker(LatLng location) {
+        String title = Double.toString(location.latitude) + "," + Double.toString(location.longitude);
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .title(title));
+
+        mMap.addCircle(new CircleOptions()
+                .center(location)
+                .radius(150)
+                .strokeColor(Color.BLUE));
+
+        return marker;
+    }
+
+    private void createGeofencingRequest(Geofence geofence) {
+        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        // вешаем триггеры на вход, перемещение внутри и выход из зоны
+        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT | GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.addGeofence(geofence);  // Добавим геозону
+        GeofencingRequest geoFenceRequest = builder.build();  // это запрос на добавление геозоны (параметры только что задавали, теперь строим)
+        // создадим интент, при сигнале от Google Play будет вызываться этот интент, а интент настроен на запуск службы, обслуживающей всё это
+        Intent geoService = new Intent(MapsActivity.this, GeoFenceService.class);
+        // интент будет работать через этот класс
+        PendingIntent pendingIntent = PendingIntent
+                .getService(MapsActivity.this, 0, geoService, PendingIntent.FLAG_UPDATE_CURRENT);
+        // это клиент геозоны, собственно он и занимается вызовом нашей службы
+        GeofencingClient geoClient = LocationServices.getGeofencingClient(MapsActivity.this);
+        geoClient.addGeofences(geoFenceRequest, pendingIntent);   // добавляем запрос запрос геозоны и указываем, какой интент будет при этом срабатывать
+    }
+
+    private Geofence createGeofence(Marker marker) {
+        // создаем геозону через построитель.
+        return new Geofence.Builder()
+                .setRequestId(String.valueOf(marker.getTitle()))   // Здесь указывается имя геозоны (вернее это идентификатор, но он строковый)
+                // типа геозоны, вход, перемещение внутри, выход
+                .setTransitionTypes(GeofencingRequest.INITIAL_TRIGGER_ENTER | GeofencingRequest.INITIAL_TRIGGER_EXIT | GeofencingRequest.INITIAL_TRIGGER_DWELL)
+                .setCircularRegion(marker.getPosition().latitude, marker.getPosition().longitude, 150) // Координаты геозоны
+                .setExpirationDuration(Geofence.NEVER_EXPIRE)   // Геозона будет постоянной, пока не удалим геозону или приложение
+                .setLoiteringDelay(1000)    // Установим временную задержку в мс между событиями входа в зону и перемещения в зоне
+                .build();
+    }
+
+    // Геозоны работают через службы Google Play
+    // поэтому надо создать клиента этой службы
+    // И соединится со службой
+    private void createGoogleApiClient() {
+        // Создаем клиента службы GooglePlay
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)   // Укажем, что нам нужна геолокация
+                .build();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        googleApiClient.connect();
+        // Соединимся со службой
+        Log.d("GeoFence", "connect to googleApiClient");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        googleApiClient.disconnect();
     }
 
     // Запрос координат
@@ -67,7 +171,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double lng = location.getLongitude();// Долгота
                 // Перепестить карту на текущую позицию
                 LatLng currentPosition = new LatLng(lat, lng);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, (float) 12));
+                LatLng prevPosition = currentMarker.getPosition();
+                if (!(prevPosition.longitude == 0 && prevPosition.latitude == 0)) {
+                    mMap.addPolyline(new PolylineOptions()
+                            .add(prevPosition, currentPosition)
+                            .color(Color.RED)
+                            .width(5));
+                }
+                currentMarker.setPosition(currentPosition);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, (float) 15));
             }
 
             @Override
@@ -118,6 +230,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Запросим координаты
                 requestLocation();
             }
+        }
+    }
+
+    // На Андроидах версии 26 и выше необходимо создавать канал нотификации
+    // На старых версиях канал создавать не надо
+    private void initNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel mChannel = new NotificationChannel("2", "name", importance);
+            notificationManager.createNotificationChannel(mChannel);
         }
     }
 }
