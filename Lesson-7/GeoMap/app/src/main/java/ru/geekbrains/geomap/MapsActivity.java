@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -137,8 +139,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
                 getAddress(latLng);
                 addMarker(latLng);
+                drawLine();
             }
         });
+    }
+
+    // соединяем точки
+    private void drawLine(){
+        int last = markers.size() - 1;
+        if (last >= 1){
+            LatLng previous = markers.get(last-1).getPosition();
+            LatLng current = markers.get(last).getPosition();
+            mMap.addPolyline(new PolylineOptions()
+                .add(previous, current)
+                .color(Color.RED)
+                .width(5));
+        }
     }
 
     // Получаем адрес по координатам
