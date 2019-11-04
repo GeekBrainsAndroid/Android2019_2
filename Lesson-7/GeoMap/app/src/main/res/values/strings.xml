@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Geo Map</string>
+    <string name="title_activity_maps">Geo Map</string>
+    <string name="latitude">Широта</string>
+    <string name="longitude">Долгота</string>
+    <string name="search">Поиск</string>
+</resources>
