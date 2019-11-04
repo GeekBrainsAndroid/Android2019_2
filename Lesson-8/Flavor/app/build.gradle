@@ -24,8 +24,18 @@ android {
             applicationIdSuffix ".debugStaging"
         }
     }
-    flavorDimensions 'version'
+    flavorDimensions 'version', 'view'
     productFlavors {
+        demo {
+            dimension "view"
+            applicationIdSuffix ".demo"
+            versionNameSuffix ".demo"
+        }
+        master {
+            dimension "view"
+            applicationIdSuffix ".master"
+            versionNameSuffix ".master"
+        }
         freeConfig {
             dimension = 'version'
             versionNameSuffix = '.free'
