@@ -17,9 +17,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -30,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private Marker currentMarker;
+    private List<Marker> markers = new ArrayList<Marker>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +86,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng sydney = new LatLng(-34, 151);
         currentMarker = mMap.addMarker(new MarkerOptions().position(sydney).title("Текущая позиция"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                addMarker(latLng);
+            }
+        });
+    }
+
+    // Добавление меток на карту
+    private void addMarker(LatLng location){
+        String title = Integer.toString(markers.size());
+        Marker marker = mMap.addMarker(new MarkerOptions()
+                .position(location)
+                .title(title)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
+        markers.add(marker);
     }
 
     // Запрос координат
