@@ -6,12 +6,15 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,13 +25,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 10;
-
+    private TextView textAddress;
     private EditText textLatitude;
     private EditText textLongitude;
 
@@ -53,6 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initViews() {
         textLatitude = findViewById(R.id.editLat);
         textLongitude = findViewById(R.id.editLng);
+        textAddress = findViewById(R.id.textAddress);
     }
 
     // Запрос пермиссий
@@ -90,9 +95,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
+                getAddress(latLng);
                 addMarker(latLng);
             }
         });
+    }
+
+    // Получаем адрес по координатам
+    private void getAddress(final LatLng location){
+        final Geocoder geocoder = new Geocoder(this);
+        // Поскольку geocoder работает по интернету, создадим отдельный поток
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final List<Address> addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1);
+                    textAddress.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            textAddress.setText(addresses.get(0).getAddressLine(0));
+                        }
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     // Добавление меток на карту

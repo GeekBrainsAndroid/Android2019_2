@@ -50,6 +50,11 @@
     </LinearLayout>
 
 
+    <TextView
+        android:id="@+id/textAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <include layout="@layout/activity_maps" />
 
 </LinearLayout>
