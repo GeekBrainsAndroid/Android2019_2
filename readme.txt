@@ -20,3 +20,7 @@
 		Lesson-5/SharedPrefs: Сохраняем настойки
 Урок 6:
 		Lesson-6/Broadcast: Отправляем и получаем широковещательные сообщения
+		Lesson-6/PushMessage: Получаем Push уведомления на устройстве от Firebase
+Урок 7:
+		Lesson-7/GeoMap: Работа с картами
+		Lesson-7/GeoFences: Работа с геозонами		
