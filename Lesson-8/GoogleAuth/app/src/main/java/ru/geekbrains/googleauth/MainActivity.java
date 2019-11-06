@@ -1,5 +1,6 @@
 package ru.geekbrains.googleauth;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,7 +14,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     // Кнопка регистрации через гугл
     private com.google.android.gms.common.SignInButton buttonSignIn;
+    // Кнопка выхода из Гугл
+    private MaterialButton buttonSingOut;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +55,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         );
+
+        // кнопка выхода
+        buttonSingOut = findViewById(R.id.sing_out_button);
+        buttonSingOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        enableSign();
         // Проверим, заходил ли пользователь в этом приложении через Гугл
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if (account != null) {
             // Пользователь уже заходил, сделаем кнопку недоступной
-            buttonSignIn.setEnabled(false);
+            disableSign();
             // Обновим почтовый адрес этого пользователя и выведем его на экран
             updateUI(account.getEmail());
         }
@@ -83,6 +98,18 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+    // Выход из учетной записи в приложении
+    private void signOut() {
+        googleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        updateUI("email");
+                        enableSign();
+                    }
+                });
+    }
+
     //https://developers.google.com/identity/sign-in/android/backend-auth?authuser=1
     // Получение данных пользователя
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -90,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Регистрация прошла успешно
-            buttonSignIn.setEnabled(false);
+            disableSign();
             updateUI(account.getEmail());
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -103,6 +130,16 @@ public class MainActivity extends AppCompatActivity {
     private void updateUI(String e_mail) {
         TextView email = findViewById(R.id.email);
         email.setText(e_mail);
+    }
+
+    private void enableSign(){
+        buttonSignIn.setEnabled(true);
+        buttonSingOut.setEnabled(false);
+    }
+
+    private void disableSign(){
+        buttonSignIn.setEnabled(false);
+        buttonSingOut.setEnabled(true);
     }
 
 }
