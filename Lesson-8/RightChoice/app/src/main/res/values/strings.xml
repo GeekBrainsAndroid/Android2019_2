@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Right Choice</string>
+    <string name="action_settings">Settings</string>
+    <string name="right_choice">Правильный выбор</string>
+    <string name="do_your_choice">Сделайте свой выбор</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="delay_choice">Отложите решение</string>
+</resources>
